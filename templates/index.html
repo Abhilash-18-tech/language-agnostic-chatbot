@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot - Multilingual with Voice</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>AI Chatbot</h1>
+            <p class="subtitle">Multilingual | Voice Support | AI-Powered</p>
+        </header>
+
+        <!-- API Key Bar -->
+        <div class="api-bar">
+            <span class="api-status" id="api-status">
+                {% if api_available %}
+                <span class="status-dot green"></span> AI Mode: Active
+                {% else %}
+                <span class="status-dot orange"></span> AI Mode: Local (add key for better answers)
+                {% endif %}
+            </span>
+            <button id="api-key-btn" class="btn-api">🔑 API Key</button>
+        </div>
+
+        <!-- Settings Bar -->
+        <div class="settings-bar">
+            <div class="setting-group">
+                <label for="domain-select">Domain:</label>
+                <select id="domain-select">
+                    {% for domain in domains %}
+                    <option value="{{ domain }}" {% if domain == default_domain %}selected{% endif %}>
+                        {{ domain | capitalize }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="setting-group">
+                <label for="language-select">Language:</label>
+                <select id="language-select">
+                    <option value="auto">Auto-detect</option>
+                    {% for code, name in languages.items() %}
+                    <option value="{{ code }}" {% if code == default_language %}selected{% endif %}>
+                        {{ name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button id="clear-btn" class="btn-clear" title="Clear chat history">Clear</button>
+        </div>
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span id="status-domain">Domain: General</span>
+            <span id="status-language">Language: Auto</span>
+            <span id="status-confidence" class="confidence-badge">Confidence: --</span>
+            <span id="voice-status" class="voice-status">Voice ready</span>
+        </div>
+
+        <!-- Chat Container -->
+        <div class="chat-container" id="chat-container">
+            <div class="welcome-message">
+                <h2>Welcome!</h2>
+                <p>I'm your language-agnostic AI assistant with voice support.</p>
+                <ul>
+                    <li>I understand <strong>any language</strong></li>
+                    <li>I specialize in <strong id="current-domain">general</strong> domain</li>
+                    <li>I remember our conversation context</li>
+                    <li>Click the microphone to <strong>speak</strong> your questions</li>
+                    <li>Click the speaker icon to <strong>hear</strong> responses</li>
+                </ul>
+                <p class="api-note">
+                    <em>For accurate AI-powered answers, click "API Key" and enter your Google Gemini API key.</em>
+                    <br>Get a free key at: <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="input-area">
+            <button id="voice-toggle" class="btn-voice" title="Click to speak">
+                <span id="voice-icon">🎤</span>
+            </button>
+            <textarea
+                id="user-input"
+                placeholder="Type your message... (Press Enter to send, Shift+Enter for new line)"
+                rows="2"
+            ></textarea>
+            <button id="send-btn" class="btn-send">
+                <span>Send</span>
+                <span class="send-icon">➤</span>
+            </button>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Built with Flask | Google Translate | Web Speech API | Optional: Google Gemini AI</p>
+        </footer>
+    </div>
+
+    <!-- API Key Modal -->
+    <div id="api-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🔑 Enter Google Gemini API Key</h3>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Enter your API key to enable AI-powered responses. Your key is stored only in your browser session.</p>
+                <input type="password" id="api-key-input" placeholder="Enter your API key..." />
+                <button id="api-key-save" class="btn-save">Save Key</button>
+                <button id="api-key-clear" class="btn-clear-key">Remove Key</button>
+                <p class="modal-note">
+                    Get a free API key at: <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
